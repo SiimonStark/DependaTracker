@@ -23,3 +23,15 @@ code {
   font-size: 25px;
   margin: .3rem;
 }
+
+.clear {
+  color: black;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
