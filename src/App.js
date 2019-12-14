@@ -30,8 +30,14 @@ class App extends Component {
   }
 
   renderDays = () => {
-    return this.state.daysItems.map(day => 
-      <i className={'far fa-circle ' + day.stat} id={day.i} key={'day'+day.i} />
+    return this.state.daysItems.map(day => {
+      const faType = day.stat === 'clear' ? 'far' : 'fas';
+
+      return (<i 
+        className={`${faType} fa-circle  ${day.stat}`}  
+        id={day.i} key={'day'+day.i} 
+        onClick={(e) => this.handleHabit(e)} />)
+      }
     )
   }
 
@@ -39,8 +45,24 @@ class App extends Component {
     // Once calendar date has been clicked,
       // Based on data, update database!
     // Call updateDatabase(habit, data)
-    console.log(e.target.name, e.target.type)
-    this.updateDatabase('habit', {'month': 0, 'day': 0, 'status': 'clear'})
+    const {id} = e.target;
+    let {daysItems} = this.state;
+    daysItems[id - 1] = this.incrementHabit(daysItems[id - 1]);
+    
+    this.updateDatabase('habit', { 'month': 0, 'day': daysItems[id - 1].i, 'status': daysItems[id - 1].clear})
+    this.setState({daysItems});
+  }
+
+  incrementHabit = (h) => {
+    switch(h.stat) {
+      case 'clear': h.stat = 'green';
+        break;
+      case 'green': h.stat = 'red';
+        break;
+      default: h.stat = 'clear';
+    }
+
+    return h
   }
 
   handleStatsTracker = (e) => {
@@ -54,7 +76,7 @@ class App extends Component {
 
   updateDatabase = (collection, data) => {
     //!! Update DataBase w/ new data
-    console.alert('sent to DB:', collection)
+    console.error('Sending to DB')
   }
 
   render() {
@@ -109,7 +131,7 @@ class App extends Component {
                           </h2>
                           <button
                             href="#"
-                            className="btn btn-secondary btn-lg disabled"
+                            className="btn btn-danger btn-lg disabled"
                             tabIndex="-1"
                             aria-disabled="true"
                           >
@@ -135,7 +157,7 @@ class App extends Component {
                           </h2>
                           <button
                             href="#"
-                            className="btn btn-secondary btn-lg disabled"
+                            className="btn btn-danger btn-lg disabled"
                             tabIndex="-1"
                             aria-disabled="true"
                           >
@@ -161,7 +183,7 @@ class App extends Component {
                           </h2>
                           <button
                             href="#"
-                            className="btn btn-secondary btn-lg disabled"
+                            className="btn btn-danger btn-lg disabled"
                             tabIndex="-1"
                             aria-disabled="true"
                           >
